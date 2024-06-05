@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,5 +48,23 @@ public class ProdutosController {
 		return new ResponseEntity<Produto>(_produto, HttpStatus.OK);
 	}
 	
+	@PutMapping("inativar/{id}")
+	public ResponseEntity<Produto> inativar(
+			@PathVariable long id){
+		
+		Produto produto = produtoService.inativar(id);
+		
+		return new ResponseEntity<Produto>(
+							produto, HttpStatus.OK);
+	}
 	
+	@PutMapping("alterar/{id}")
+	public ResponseEntity<Produto> alterar(
+			@PathVariable long id, @RequestBody Produto produto){
+		
+		Produto _produto = produtoService.alterar(id, produto);
+		
+		return new ResponseEntity<Produto>(
+							_produto, HttpStatus.OK);
+	}
 }
