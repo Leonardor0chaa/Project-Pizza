@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutoService {
+
 	private ProdutoRepository produtoRepository;
 
 	public ProdutoService(ProdutoRepository produtoRepository) {
@@ -22,43 +23,49 @@ public class ProdutoService {
 		return produtos;
 	}
 
-	public Produto findById(long id) {
-		Produto produto = produtoRepository.findById(id).orElseThrow();
-		return produto;
-	}
-
+	// jakarta.transaction.Transactional
+	@Transactional
 	public Produto create(Produto produto) {
+
 		produto.setUrlFoto(null);
 		produto.setStatusProd("ATIVO");
 
 		return produtoRepository.save(produto);
 	}
-
+	
 	@Transactional
 	public Produto inativar(long id) {
-		Optional<Produto> _produto = produtoRepository.findById(id);
-
+		Optional<Produto> _produto = 
+				produtoRepository.findById(id);
+		
 		if (_produto.isPresent()) {
-			Produto produtoAtualizada = _produto.get();
-			produtoAtualizada.setStatusProd("inativo");
-
-			return produtoRepository.save(produtoAtualizada);
+			Produto produtoAtualizado = _produto.get();
+			produtoAtualizado.setStatusProd("INATIVO");
+			
+			return produtoRepository.save(produtoAtualizado);
 		}
 		return null;
 	}
-
+	
+	
 	@Transactional
 	public Produto alterar(long id, Produto produto) {
-		Optional<Produto> _produto = produtoRepository.findById(id);
-
+		Optional<Produto> _produto = 
+				produtoRepository.findById(id);
+		
 		if (_produto.isPresent()) {
-			Produto produtoAtualizada = _produto.get();
-
-			produtoAtualizada.setPreco(produto.getPreco());
-			produtoAtualizada.setDescricao(produto.getDescricao());
-
-			return produtoRepository.save(produtoAtualizada);
+			Produto produtoAtualizado = _produto.get();
+			
+			produtoAtualizado.setPreco(produto.getPreco());
+			produtoAtualizado.setDescricao(produto.getDescricao());
+			
+			return produtoRepository.save(produtoAtualizado);
 		}
 		return null;
 	}
+
 }
+
+
+
+

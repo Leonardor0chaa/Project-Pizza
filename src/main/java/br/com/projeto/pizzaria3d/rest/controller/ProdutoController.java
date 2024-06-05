@@ -17,12 +17,11 @@ import br.com.projeto.pizzaria3d.service.ProdutoService;
 
 @RestController
 @RequestMapping("/produto/")
-public class ProdutosController {
+public class ProdutoController {
 
 	private ProdutoService produtoService;
 
-	public ProdutosController(ProdutoService produtoService) {
-		super();
+	public ProdutoController(ProdutoService produtoService) {
 		this.produtoService = produtoService;
 	}
 
@@ -30,22 +29,19 @@ public class ProdutosController {
 	public ResponseEntity<List<Produto>> findAll() {
 		List<Produto> produtos = produtoService.findAll();
 
-		return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
-	}
-	
-	@GetMapping("findById/{id}")
-	public ResponseEntity<Produto> findById(@PathVariable long id) {
-		Produto produto = produtoService.findById(id);
-		
-		return new ResponseEntity<Produto>(produto, HttpStatus.OK);
+		return new ResponseEntity<List<Produto>>(
+								produtos, HttpStatus.OK);
 	}
 	
 	@PostMapping("create")
-	public ResponseEntity<Produto> create(@RequestBody Produto produto) {
-
-		Produto _produto = produtoService.create(produto);
-
-		return new ResponseEntity<Produto>(_produto, HttpStatus.OK);
+	public ResponseEntity<Produto> create(
+			@RequestBody Produto produto){
+		
+		Produto _produto = 
+				produtoService.create(produto);
+		
+		return new ResponseEntity<Produto>
+					(_produto, HttpStatus.OK);
 	}
 	
 	@PutMapping("inativar/{id}")
@@ -60,11 +56,22 @@ public class ProdutosController {
 	
 	@PutMapping("alterar/{id}")
 	public ResponseEntity<Produto> alterar(
-			@PathVariable long id, @RequestBody Produto produto){
+		@PathVariable long id, 
+		@RequestBody Produto produto){
 		
-		Produto _produto = produtoService.alterar(id, produto);
+		Produto _produto = 
+				produtoService.alterar(id, produto);  
 		
 		return new ResponseEntity<Produto>(
-							_produto, HttpStatus.OK);
+						_produto, HttpStatus.OK);
 	}
+	
+	
+	
 }
+
+
+
+
+
+

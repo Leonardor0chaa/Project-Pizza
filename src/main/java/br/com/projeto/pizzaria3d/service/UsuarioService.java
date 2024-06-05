@@ -5,11 +5,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import br.com.projeto.pizzaria3d.model.entity.Usuario;
 import br.com.projeto.pizzaria3d.model.repository.UsuarioRepository;
@@ -61,26 +57,47 @@ public class UsuarioService {
 		Usuario usuario = usuarioRepository.findByEmail(email);
 		
 		if (usuario.getStatusUsuario().equals("ATIVO")) {
-			byte[] decodePass = Base64.getDecoder().decode(usuario.getSenha());
-		if (new String(decodePass).equals(senha)) {
-			return usuario;
+			byte[] decodedPass = Base64.getDecoder()
+					.decode(usuario.getSenha());
+			if(new String(decodedPass).equals(senha)) {
+				return usuario;
+			}
 		}
-		}
-	return null;	
+		return null;
 	}
 	
 	@Transactional
 	public Usuario inativar(long id) {
+		Optional<Usuario> _usuario = 
+				usuarioRepository.findById(id);
+		
+		if (_usuario.isPresent()) {
+			Usuario usuarioAtualizado = _usuario.get();
+			usuarioAtualizado.setStatusUsuario("INATIVO");
+			
+			return usuarioRepository.save(usuarioAtualizado);
+		}
+		return null;
+	}
+	
+	@Transactional
+	public Usuario alterarSenha(long id, Usuario usuario) {
+		
 		Optional<Usuario> _usuario = usuarioRepository.findById(id);
 		
-	if (_usuario.isPresent()) {
-		Usuario usuarioAtualizada = _usuario.get();
-		usuarioAtualizada.setStatusUsuario("inativo");
-		
-		return usuarioRepository.save(usuarioAtualizada);
+		if (_usuario.isPresent()) {
+			Usuario usuarioAtualizado = _usuario.get();
+			
+			String senha = Base64.getEncoder().encodeToString( 
+					usuario.getSenha().getBytes());
+			
+			usuarioAtualizado.setSenha(senha);
+			
+			return usuarioRepository.save(usuarioAtualizado);
+		}
+		return null;
 	}
-	return null;
-}
+	
 }
 
 
